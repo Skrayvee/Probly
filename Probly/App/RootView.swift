@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct RootView: View {
     var body: some View {
@@ -13,6 +14,7 @@ struct RootView: View {
             NavigationStack {
                 DecisionsView()
             }
+            .modelContainer(for: [Decision.self], inMemory: false)
         }
         .tint(Color("Accent"))
     }
