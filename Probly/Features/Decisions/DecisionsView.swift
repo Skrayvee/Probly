@@ -21,13 +21,10 @@ struct DecisionsView: View {
                     Text("С чего начнём?")
                         .font(.title2)
                         .fontWeight(.semibold)
-                    Text("Опишите свою ситуацию и добавьте вопросы. Разберёмся с ними по порядку.")
+                    Text("Опишите свою ситуацию и добавьте вопросы. Разберёмся с ними по порядку")
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
-                    Button("Новый разбор", systemImage: "plus") {}
-                        .labelStyle(.titleAndIcon)
-                        .buttonStyle(.glassProminent)
-                        .controlSize(.large)
+                    NewDecisionButtonView()
                     Text("Или нажмите + в правом нижнем углу")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
@@ -42,10 +39,7 @@ struct DecisionsView: View {
         .toolbar {
             ToolbarSpacer(placement: .bottomBar)
             ToolbarItem(placement: .bottomBar) {
-                Button("Новый разбор", systemImage: "plus") {}
-                    .labelStyle(.titleAndIcon)
-                    .buttonStyle(.glassProminent)
-                    .controlSize(.large)
+                NewDecisionButtonView()
             }
         }
     }
