@@ -8,9 +8,9 @@
 import Foundation
 import SwiftData
 
-enum QuestionType: Codable {
-    case choice
+enum QuestionType: Codable, CaseIterable {
     case noul
+    case choice
     case score
     
     var title: String {

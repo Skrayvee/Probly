@@ -12,11 +12,21 @@ struct DecisionEditorView: View {
     
     @State private var title = ""
     @State private var state = ""
+    @State private var questions: [Question] = []
     
     init(decision: Decision? = nil) {
         self.decision = decision
         _title = State(initialValue: decision?.title ?? "")
         _state = State(initialValue: decision?.state ?? "")
+        _questions = State(initialValue: decision?.questions ?? [])
+    }
+    
+    private func saveQuestion(_ question: Question) {
+        if let index = questions.firstIndex(where: { $0.id == question.id }) {
+            questions[index] = question
+        } else {
+            questions.append(question)
+        }
     }
     
     var body: some View {
@@ -29,7 +39,22 @@ struct DecisionEditorView: View {
                     .lineLimit(6...12)
             }
             Section(header: Text("Вопросы")) {
-                Button("Добавить вопрос", systemImage: "plus") {}
+                ForEach(questions, id: \.id) { question in
+                    NavigationLink {
+                        QuestionEditorView(question: question, onSave: saveQuestion)
+                    } label: {
+                        Text(question.instructions)
+                    }
+                }
+                
+                NavigationLink {
+                    QuestionEditorView(onSave: saveQuestion)
+                } label: {
+                    Label("Добавить вопрос", systemImage: "plus")
+                        .foregroundStyle(.accent)
+                }
+                .buttonStyle(.plain)
+                .navigationLinkIndicatorVisibility(.hidden)
             }
         }
         .navigationTitle(decision == nil ? "Новый разбор" : "Изменить разбор")
