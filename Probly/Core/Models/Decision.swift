@@ -47,7 +47,7 @@ enum QuestionCriteria: Codable {
 }
 
 struct Question: Codable, Identifiable {
-    var id: UUID
+    let id: UUID
     var instructions: String
     var criteria: QuestionCriteria
     
