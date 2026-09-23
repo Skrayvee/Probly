@@ -97,8 +97,10 @@ struct QuestionEditorView: View {
                     .onDelete {offsets in
                         choiceCriteria.remove(atOffsets: offsets)
                     }
-                    Button("Добавить вариант", systemImage: "plus") {
-                        choiceCriteria.append(ChoiceDraft())
+                    if scoreCriteria.count < 255 {
+                        Button("Добавить вариант", systemImage: "plus") {
+                            choiceCriteria.append(ChoiceDraft())
+                        }
                     }
                 }
             } else if type == .score {
@@ -120,8 +122,10 @@ struct QuestionEditorView: View {
                     .onDelete { offsets in
                         scoreCriteria.remove(atOffsets: offsets)
                     }
-                    Button("Добавить уровень", systemImage: "plus") {
-                        scoreCriteria.append(ScoreDraft())
+                    if scoreCriteria.count < 10 {
+                        Button("Добавить уровень", systemImage: "plus") {
+                            scoreCriteria.append(ScoreDraft())
+                        }
                     }
                 }
             } else if type == .noul {
@@ -139,6 +143,7 @@ struct QuestionEditorView: View {
                 }
             }
         }
+        .scrollDismissesKeyboard(.interactively)
         .animation(.easeInOut(duration: 0.15), value: type)
         .navigationTitle(question == nil ? "Новый вопрос" : "Изменить вопрос")
         .toolbar {
