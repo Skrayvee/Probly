@@ -46,6 +46,9 @@ struct DecisionEditorView: View {
                         Text(question.instructions)
                     }
                 }
+                .onDelete { offsets in
+                    questions.remove(atOffsets: offsets)
+                }
                 
                 NavigationLink {
                     QuestionEditorView(onSave: saveQuestion)

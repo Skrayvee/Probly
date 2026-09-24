@@ -48,6 +48,18 @@ struct QuestionEditorView: View {
         }
     }
     
+    private var canSave: Bool {
+        if instructions.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return false
+        }
+
+        switch type {
+        case .choice: return (2...255).contains(choiceCriteria.count) && choiceCriteria.allSatisfy({ option in !option.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty })
+        case .score: return (2...10).contains(scoreCriteria.count) && scoreCriteria.allSatisfy({ option in !option.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty })
+        case .noul: return true
+        }
+    }
+    
     private func save() {
         let criteria: QuestionCriteria = switch type {
         case .choice: .choice(choiceCriteria.map {option in ChoiceOption(title: option.title, explanation: option.explanation.isEmpty ? nil : option.explanation)})
@@ -151,7 +163,7 @@ struct QuestionEditorView: View {
                 Button("Сохранить") {
                     save()
                 }
-                .disabled(instructions.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                .disabled(!canSave)
             }
         }
     }
