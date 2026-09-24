@@ -39,11 +39,22 @@ struct DecisionEditorView: View {
                     .lineLimit(6...12)
             }
             Section(header: Text("Вопросы")) {
-                ForEach(questions, id: \.id) { question in
+                ForEach(questions) { question in
                     NavigationLink {
                         QuestionEditorView(question: question, onSave: saveQuestion)
                     } label: {
-                        Text(question.instructions)
+                        HStack {
+                            Text(question.instructions)
+                            Spacer()
+                            Group {
+                                switch question.criteria {
+                                case .choice(let options): Text("\(options.count) вариантов")
+                                case .score(let levels): Text("\(levels.count) уровней шкалы")
+                                case .noul: Text(question.type.title)
+                                }
+                            }
+                            .foregroundStyle(.secondary)
+                        }
                     }
                 }
                 .onDelete { offsets in

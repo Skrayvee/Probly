@@ -120,7 +120,7 @@ struct QuestionEditorView: View {
                     ForEach($scoreCriteria) { $option in
                         if let index = scoreCriteria.firstIndex(where: {$0.id == option.id}) {
                             HStack {
-                                Text("\(index + 1)")
+                                Text(String(index + 1))
                                     .font(.headline)
                                     .monospacedDigit()
                                     .foregroundStyle(.secondary)
