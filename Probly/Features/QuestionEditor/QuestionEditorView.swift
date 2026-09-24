@@ -55,7 +55,7 @@ struct QuestionEditorView: View {
 
         switch type {
         case .choice: return (2...255).contains(choiceCriteria.count) && choiceCriteria.allSatisfy({ option in !option.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty })
-        case .score: return (2...10).contains(scoreCriteria.count) && scoreCriteria.allSatisfy({ option in !option.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty })
+        case .score: return (2...10).contains(scoreCriteria.count) && scoreCriteria.allSatisfy({ level in !level.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty })
         case .noul: return true
         }
     }
