@@ -74,6 +74,12 @@ struct DecisionEditorView: View {
         .navigationTitle(decision == nil ? "Новый разбор" : "Изменить разбор")
         .navigationBarTitleDisplayMode(.inline)
         .scrollDismissesKeyboard(.interactively)
+        .toolbar {
+            ToolbarItem(placement: .bottomBar) {
+                Button("Сохранить") {}
+                    .buttonStyle(.glassProminent)
+            }
+        }
     }
 }
 

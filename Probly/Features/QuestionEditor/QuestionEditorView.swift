@@ -160,7 +160,7 @@ struct QuestionEditorView: View {
         .navigationTitle(question == nil ? "Новый вопрос" : "Изменить вопрос")
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
-                Button("Сохранить") {
+                Button("Добавить") {
                     save()
                 }
                 .disabled(!canSave)
