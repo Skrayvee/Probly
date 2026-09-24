@@ -9,9 +9,7 @@ import SwiftUI
 
 struct NewDecisionButtonView: View {
     var body: some View {
-        NavigationLink {
-            DecisionEditorView()
-        } label: {
+        NavigationLink(value: Route.newDecision) {
             Label("Новый разбор", systemImage: "plus")
         }
         .buttonStyle(.glassProminent)

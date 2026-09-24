@@ -73,10 +73,10 @@ class Decision {
     var questions: [Question]
     private(set) var createdAt: Date
     
-    init(title: String, state: String) {
+    init(title: String, state: String, questions: [Question]) {
         self.title = title
         self.state = state
-        self.questions = []
+        self.questions = questions
         self.createdAt = .now
     }
 }

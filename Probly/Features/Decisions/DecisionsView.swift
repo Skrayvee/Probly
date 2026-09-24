@@ -31,7 +31,11 @@ struct DecisionsView: View {
                 }
                 .padding()
             } else {
-                List {}
+                List(decisions) {decision in
+                    NavigationLink(value: Route.decision(decision.persistentModelID)) {
+                        Text(decision.title)
+                    }
+                }
             }
         }
         .navigationTitle("Разборы")

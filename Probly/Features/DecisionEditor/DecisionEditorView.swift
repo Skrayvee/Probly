@@ -6,19 +6,50 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct DecisionEditorView: View {
     let decision: Decision?
+    let onSave: (Decision) -> Void
     
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
+    
+    @State private var isSaveErrorPresented = false
+    @State private var saveErrorMessage = ""
     @State private var title = ""
     @State private var state = ""
     @State private var questions: [Question] = []
     
-    init(decision: Decision? = nil) {
+    init(decision: Decision? = nil, onSave: @escaping (Decision) -> Void) {
         self.decision = decision
+        self.onSave = onSave
         _title = State(initialValue: decision?.title ?? "")
         _state = State(initialValue: decision?.state ?? "")
         _questions = State(initialValue: decision?.questions ?? [])
+    }
+    
+    private func save() {
+        var result = decision ?? Decision(title: title, state: state, questions: questions)
+        result.title = title
+        result.state = state
+        result.questions = questions
+        
+        if decision == nil {
+            modelContext.insert(result)
+        }
+        
+        do {
+            try modelContext.save()
+            onSave(result)
+            if decision != nil {
+                dismiss()
+            }
+        } catch {
+            modelContext.rollback()
+            saveErrorMessage = error.localizedDescription
+            isSaveErrorPresented = true
+        }
     }
     
     private func saveQuestion(_ question: Question) {
@@ -76,13 +107,21 @@ struct DecisionEditorView: View {
         .scrollDismissesKeyboard(.interactively)
         .toolbar {
             ToolbarItem(placement: .bottomBar) {
-                Button("Сохранить") {}
+                Button("Сохранить") {
+                    save()
+                }
                     .buttonStyle(.glassProminent)
+                    .disabled(title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || questions.count == 0)
+            }
+        }
+        .alert("Произошла ошибка", isPresented: $isSaveErrorPresented) {
+            Button("ОК", role: .cancel) {
+                isSaveErrorPresented = false
             }
         }
     }
 }
 
 #Preview {
-    DecisionEditorView()
+//    DecisionEditorView()
 }

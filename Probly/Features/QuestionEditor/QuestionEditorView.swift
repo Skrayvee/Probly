@@ -95,7 +95,8 @@ struct QuestionEditorView: View {
                 .listRowBackground(Color.clear)
                 .listRowInsets(.all, 0)
             }
-            if type == .choice {
+            switch type {
+            case .choice:
                 Section(header: Text("Варианты"), footer: Text("Не более 255 вариантов")) {
                     ForEach($choiceCriteria) {$option in
                         VStack {
@@ -115,7 +116,7 @@ struct QuestionEditorView: View {
                         }
                     }
                 }
-            } else if type == .score {
+            case .score:
                 Section(header: Text("Уровни шкалы"), footer: Text("Не менее 2 и не более 10")) {
                     ForEach($scoreCriteria) { $option in
                         if let index = scoreCriteria.firstIndex(where: {$0.id == option.id}) {
@@ -140,7 +141,7 @@ struct QuestionEditorView: View {
                         }
                     }
                 }
-            } else if type == .noul {
+            case .noul:
                 Section(header: Text("Пояснения"), footer: Text("Пояснения являются необязательными, вы можете оставиь их пустыми")) {
                     VStack(alignment: .leading) {
                         Text("Да")
