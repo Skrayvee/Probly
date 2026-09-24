@@ -60,6 +60,7 @@ struct DecisionView: View {
                     }
                     ToolbarItem(placement: .bottomBar) {
                         Button("Получить ответы") {}
+                            .buttonStyle(.glassProminent)
                     }
                 }
             } else if _decisions.fetchError != nil {
