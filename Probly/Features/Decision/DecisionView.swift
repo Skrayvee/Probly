@@ -58,6 +58,9 @@ struct DecisionView: View {
                             Label("Редактировать", systemImage: "square.and.pencil")
                         }
                     }
+                    ToolbarItem(placement: .bottomBar) {
+                        Button("Получить ответы") {}
+                    }
                 }
             } else if _decisions.fetchError != nil {
                 ContentUnavailableView("Не удалось загрузить разбор", systemImage: "exclamationmark.triangle")
