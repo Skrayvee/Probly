@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct DecisionsView: View {
+    @Environment(\.modelContext) private var modelContext
     @Query(sort: \Decision.createdAt, order: .reverse) private var decisions: [Decision]
     
     var body: some View {
@@ -31,9 +32,18 @@ struct DecisionsView: View {
                 }
                 .padding()
             } else {
-                List(decisions) {decision in
-                    NavigationLink(value: Route.decision(decision.persistentModelID)) {
-                        Text(decision.title)
+                List {
+                    ForEach(decisions) {decision in
+                        NavigationLink(value: Route.decision(decision.persistentModelID)) {
+                            Text(decision.title)
+                        }
+                    }
+                    .onDelete { offsets in
+                        let decisionsToDelete = offsets.map { decisions[$0] }
+                        
+                        for decision in decisionsToDelete {
+                            modelContext.delete(decision)
+                        }
                     }
                 }
             }
