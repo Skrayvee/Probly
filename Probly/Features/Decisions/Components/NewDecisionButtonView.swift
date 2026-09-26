@@ -12,8 +12,8 @@ struct NewDecisionButtonView: View {
         NavigationLink(value: Route.newDecision) {
             Label("Новый разбор", systemImage: "plus")
         }
-        .buttonStyle(.glassProminent)
         .controlSize(.large)
+//        .buttonStyle(.glass)
     }
 }
 
