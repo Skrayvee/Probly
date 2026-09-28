@@ -21,7 +21,7 @@ struct DecisionEditorView: View {
     @State private var state = ""
     @State private var questions: [Question] = []
     
-    init(decision: Decision?, onSave: @escaping (Decision) -> Void) {
+    init(decision: Decision? = nil, onSave: @escaping (Decision) -> Void) {
         self.decision = decision
         self.onSave = onSave
         _title = State(initialValue: decision?.title ?? "")
