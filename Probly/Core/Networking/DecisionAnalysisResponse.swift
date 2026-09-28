@@ -22,7 +22,7 @@ struct QuestionAnswerResponse: Decodable {
     }
     
     init(from decoder: Decoder) throws {
-        var container = try decoder.container(keyedBy: CodingKeys.self)
+        let container = try decoder.container(keyedBy: CodingKeys.self)
         
         self.id = try container.decode(UUID.self, forKey: .id)
         

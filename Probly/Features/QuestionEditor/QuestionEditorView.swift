@@ -29,7 +29,7 @@ struct QuestionEditorView: View {
     @State private var trueExplanation = ""
     @State private var falseExplanation = ""
     
-    init(question: Question? = nil, onSave: @escaping (Question) -> Void) {
+    init(question: Question?, onSave: @escaping (Question) -> Void) {
         self.question = question
         self.onSave = onSave
         _instructions = State(initialValue: question?.instructions ?? "")

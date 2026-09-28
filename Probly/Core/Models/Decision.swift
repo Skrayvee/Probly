@@ -27,12 +27,12 @@ enum QuestionType: Codable, CaseIterable {
 
 struct ChoiceOption: Codable {
     var title: String
-    var explanation: String? = nil
+    var explanation: String?
 }
 
 struct NoulCriteria: Codable {
-    var trueExplanation: String? = nil
-    var falseExplanation: String? = nil
+    var trueExplanation: String?
+    var falseExplanation: String?
     
     enum CodingKeys: String,  CodingKey {
         case trueExplanation = "true"
@@ -50,6 +50,7 @@ struct Question: Codable, Identifiable {
     let id: UUID
     var instructions: String
     var criteria: QuestionCriteria
+    var answer: QuestionAnswer?
     
     var type: QuestionType {
         switch criteria {

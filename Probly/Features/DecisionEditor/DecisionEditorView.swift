@@ -21,7 +21,7 @@ struct DecisionEditorView: View {
     @State private var state = ""
     @State private var questions: [Question] = []
     
-    init(decision: Decision? = nil, onSave: @escaping (Decision) -> Void) {
+    init(decision: Decision?, onSave: @escaping (Decision) -> Void) {
         self.decision = decision
         self.onSave = onSave
         _title = State(initialValue: decision?.title ?? "")
@@ -30,7 +30,7 @@ struct DecisionEditorView: View {
     }
     
     private func save() {
-        var result = decision ?? Decision(title: title, state: state, questions: questions)
+        let result = decision ?? Decision(title: title, state: state, questions: questions)
         result.title = title
         result.state = state
         result.questions = questions
