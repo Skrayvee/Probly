@@ -9,21 +9,23 @@ import Foundation
 
 struct DecisionAnalysisPayload: Encodable {
     let state: String
-    let questions: [QuestionPayload]
+    let questions: [String: QuestionPayload]
     
     init (decision: Decision) {
         self.state = decision.state
-        self.questions = decision.questions.map { question in QuestionPayload(question: question) }
+        var jevQuestions: [String: QuestionPayload] = [:]
+        for question in decision.questions {
+            jevQuestions[question.id.uuidString] = QuestionPayload(question: question)
+        }
+        self.questions = jevQuestions
     }
 }
 
 struct QuestionPayload: Encodable {
-    let id: UUID
     let instructions: String
     let criteria: QuestionCriteria
     
     init(question: Question) {
-        self.id = question.id
         self.instructions = question.instructions
         self.criteria = question.criteria
     }
@@ -38,11 +40,14 @@ struct QuestionPayload: Encodable {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         
-        try container.encode(id, forKey: .id)
         try container.encode(instructions, forKey: .instructions)
         
         switch criteria {
-        case .choice(let options):
+        case .choice(let rawOptions):
+            var options: [String: String?] = [:]
+            for option in rawOptions {
+                options[option.title] = option.explanation
+            }
             try container.encode("choice", forKey: .type)
             try container.encode(options, forKey: .criteria)
         case .score(let levels):
