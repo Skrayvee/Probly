@@ -8,23 +8,19 @@
 import Foundation
 
 struct DecisionAnalysisResponse: Decodable {
-    let answers: [QuestionAnswerResponse]
+    let answers: [String: QuestionAnswerResponse]
 }
 
 struct QuestionAnswerResponse: Decodable {
-    let id: UUID
     let answer: QuestionAnswer
     
     enum CodingKeys: String, CodingKey {
-        case id
         case type
         case noul
     }
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        
-        self.id = try container.decode(UUID.self, forKey: .id)
         
         let type = try container.decode(String.self, forKey: .type)
         
