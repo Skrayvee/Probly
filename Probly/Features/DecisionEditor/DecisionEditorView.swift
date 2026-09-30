@@ -39,7 +39,6 @@ struct DecisionEditorView: View {
             draft.instructions == saved.instructions
         }
         
-        result.state = state
         result.questions = questions
         
         if decision == nil {
@@ -47,6 +46,8 @@ struct DecisionEditorView: View {
         } else if decision?.state != state || questionsChanged {
             result.editedAt = .now
         }
+        
+        result.state = state
         
         do {
             try modelContext.save()

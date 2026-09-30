@@ -18,6 +18,14 @@ struct DecisionView: View {
     @State private var isAnalyzeErrorShown = false
     @State private var analyzeError = ""
     
+    private var canAnalyze: Bool {
+        guard let decision = decisions.first else { return false }
+        guard let analyzedAt = decision.analyzedAt else { return true }
+        guard let editedAt = decision.editedAt else { return false }
+        
+        return editedAt > analyzedAt
+    }
+    
     init(decisionID: PersistentIdentifier) {
         self.decisionID = decisionID
         
@@ -41,6 +49,7 @@ struct DecisionView: View {
             }
         }
         
+        decision.analyzedAt = .now
         try modelContext.save()
     }
     
@@ -86,35 +95,38 @@ struct DecisionView: View {
                             } label: {
                                 Label("Редактировать", systemImage: "square.and.pencil")
                             }
-                        }
-                        ToolbarItem(placement: .bottomBar) {
-                            Button {
-                                guard !isAnalyzing else { return }
-                                isAnalyzing = true
-                                
-                                Task {
-                                    defer { isAnalyzing = false }
-                                    
-                                    do {
-                                        try await analyze()
-                                    } catch {
-                                        isAnalyzeErrorShown = true
-                                        analyzeError = error.localizedDescription
-                                    }
-                                }
-                            } label: {
-                                HStack {
-                                    if isAnalyzing {
-                                        ProgressView()
-                                            .tint(.primary)
-                                            .colorInvert()
-                                    }
-                                    
-                                    Text(isAnalyzing ? "Получение..." : "Получить ответы")
-                                }
-                            }
-                            .buttonStyle(.glassProminent)
                             .disabled(isAnalyzing)
+                        }
+                        if canAnalyze {
+                            ToolbarItem(placement: .bottomBar) {
+                                Button {
+                                    guard !isAnalyzing else { return }
+                                    isAnalyzing = true
+                                    
+                                    Task {
+                                        defer { isAnalyzing = false }
+                                        
+                                        do {
+                                            try await analyze()
+                                        } catch {
+                                            isAnalyzeErrorShown = true
+                                            analyzeError = error.localizedDescription
+                                        }
+                                    }
+                                } label: {
+                                    HStack {
+                                        if isAnalyzing {
+                                            ProgressView()
+                                                .tint(.primary)
+                                                .colorInvert()
+                                        }
+                                        
+                                        Text(isAnalyzing ? "Получение..." : decision.analyzedAt != nil ? "Обновить ответы" : "Получить ответы")
+                                    }
+                                }
+                                .buttonStyle(.glassProminent)
+                                .disabled(isAnalyzing)
+                            }
                         }
                     }
                 }
