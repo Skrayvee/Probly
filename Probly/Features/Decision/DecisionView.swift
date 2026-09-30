@@ -95,7 +95,7 @@ struct DecisionView: View {
                                         }
                                     case .choice(let choice):
                                         if let probability = choice.probabilities[choice.choice]?.rounded() {
-                                            Text("\(choice.choice) — \(probability)")
+                                            Text("\(choice.choice) — \(Int(probability * 100))%")
                                         } else {
                                             Text(choice.choice)
                                         }
