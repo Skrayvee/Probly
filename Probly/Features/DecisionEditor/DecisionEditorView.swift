@@ -32,11 +32,20 @@ struct DecisionEditorView: View {
     private func save() {
         let result = decision ?? Decision(title: title, state: state, questions: questions)
         result.title = title
+        
+        let questionsChanged = !questions.elementsEqual(result.questions) {draft, saved in
+            draft.id == saved.id &&
+            draft.criteria == saved.criteria &&
+            draft.instructions == saved.instructions
+        }
+        
         result.state = state
         result.questions = questions
         
         if decision == nil {
             modelContext.insert(result)
+        } else if decision?.state != state || questionsChanged {
+            result.editedAt = .now
         }
         
         do {

@@ -25,12 +25,12 @@ enum QuestionType: Codable, CaseIterable {
     }
 }
 
-struct ChoiceOption: Codable {
+struct ChoiceOption: Codable, Equatable {
     var title: String
     var explanation: String?
 }
 
-struct NoulCriteria: Codable {
+struct NoulCriteria: Codable, Equatable {
     var trueExplanation: String?
     var falseExplanation: String?
     
@@ -40,7 +40,7 @@ struct NoulCriteria: Codable {
     }
 }
 
-enum QuestionCriteria: Codable {
+enum QuestionCriteria: Codable, Equatable {
     case choice([ChoiceOption])
     case noul(NoulCriteria?)
     case score([String])
@@ -73,6 +73,8 @@ class Decision {
     var state: String
     var questions: [Question]
     private(set) var createdAt: Date
+    var editedAt: Date?
+    var analyzedAt: Date?
     
     init(title: String, state: String, questions: [Question]) {
         self.title = title

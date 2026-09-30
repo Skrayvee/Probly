@@ -73,7 +73,6 @@ struct QuestionEditorView: View {
         var result = question ?? Question(instructions: instructions, criteria: criteria)
         result.instructions = instructions
         result.criteria = criteria
-
         
         onSave(result)
         dismiss()
