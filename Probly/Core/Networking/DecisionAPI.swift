@@ -10,6 +10,10 @@ import Foundation
 struct DecisionAPI {
     let analysisURL: URL
     
+    init(analysisURL: URL = AppConfig.apiUrl.appendingPathComponent("analysis")) {
+        self.analysisURL = analysisURL
+    }
+    
     func analyze(_ payload: DecisionAnalysisPayload) async throws -> DecisionAnalysisResponse {
         var request = URLRequest(url: analysisURL)
         request.httpMethod = "POST"

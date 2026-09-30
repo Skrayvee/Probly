@@ -10,6 +10,7 @@ import SwiftData
 
 struct DecisionView: View {
     let decisionID: PersistentIdentifier
+    let api = DecisionAPI()
     
     @Query private var decisions: [Decision]
     
@@ -19,6 +20,12 @@ struct DecisionView: View {
         _decisions = Query(filter: #Predicate<Decision> { decision in
             decision.persistentModelID == decisionID
         })
+    }
+    
+    func analyze() async throws {
+        let payload = DecisionAnalysisPayload(decision: decisions.first!)
+        let data = try await api.analyze(payload)
+        print(data)
     }
     
     var body: some View {
@@ -59,7 +66,15 @@ struct DecisionView: View {
                         }
                     }
                     ToolbarItem(placement: .bottomBar) {
-                        Button("Получить ответы") {}
+                        Button("Получить ответы") {
+                            Task {
+                                do {
+                                    try await analyze()
+                                } catch {
+                                    print("error", error)
+                                }
+                            }
+                        }
                             .buttonStyle(.glassProminent)
                     }
                 }
