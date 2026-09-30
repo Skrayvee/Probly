@@ -66,17 +66,43 @@ struct DecisionView: View {
                     
                     Section(header: Text("Ответы"), footer: Text("Ответы — оценки модели.\nОкончательное решение остаётся за вами")) {
                         ForEach(decision.questions) {question in
-                            HStack {
-                                Text(question.instructions)
-                                Spacer()
+                            VStack(alignment: .leading, spacing: 8) {
+                                HStack {
+                                    Text(question.instructions)
+                                    Spacer()
+                                    Group {
+                                        switch question.criteria {
+                                        case .choice(let options): Text("\(options.count) вариантов")
+                                        case .score(let levels): Text("\(levels.count) уровней шкалы")
+                                        case .noul: Text(question.type.title)
+                                        }
+                                    }
+                                    .foregroundStyle(.secondary)
+                                }
                                 Group {
-                                    switch question.criteria {
-                                    case .choice(let options): Text("\(options.count) вариантов")
-                                    case .score(let levels): Text("\(levels.count) уровней шкалы")
-                                    case .noul: Text(question.type.title)
+                                    switch question.answer {
+                                    case .noul(let noul):
+                                        let percent = Int((noul * 100).rounded())
+                                        Text("Да — \(percent)% · Нет — \(100 - percent)%")
+                                    case .score(let score):
+                                        if let maxProbability = score.probabilities.max(by: { $0.value < $1.value }) {
+                                            let probability = Int(maxProbability.value) + 1
+                                            if let title = score.legend?[maxProbability.key] {
+                                                Text("\(title) · \(probability)%")
+                                            } else {
+                                                Text("\(probability)%")
+                                            }
+                                        }
+                                    case .choice(let choice):
+                                        if let probability = choice.probabilities[choice.choice]?.rounded() {
+                                            Text("\(choice.choice) — \(probability.rounded())")
+                                        } else {
+                                            Text(choice.choice)
+                                        }
+                                    case nil: EmptyView()
                                     }
                                 }
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(.accent)
                             }
                         }
                     }
