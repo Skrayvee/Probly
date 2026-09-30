@@ -12,7 +12,11 @@ struct DecisionView: View {
     let decisionID: PersistentIdentifier
     let api = DecisionAPI()
     
+    @Environment(\.modelContext) private var modelContext
     @Query private var decisions: [Decision]
+    @State private var isAnalyzing = false
+    @State private var isAnalyzeErrorShown = false
+    @State private var analyzeError = ""
     
     init(decisionID: PersistentIdentifier) {
         self.decisionID = decisionID
@@ -23,9 +27,21 @@ struct DecisionView: View {
     }
     
     func analyze() async throws {
-        let payload = DecisionAnalysisPayload(decision: decisions.first!)
-        let data = try await api.analyze(payload)
-        print(data)
+        guard let decision = decisions.first else { return }
+        let payload = DecisionAnalysisPayload(decision: decision)
+        let response = try await api.analyze(payload)
+        
+        for (key, result) in response.answers {
+            guard let questionID = UUID(uuidString: key) else {
+                throw DecisionAPIError.invalidResponse
+            }
+            
+            if let index = decision.questions.firstIndex(where: {$0.id == questionID}) {
+                decision.questions[index].answer = result.answer
+            }
+        }
+        
+        try modelContext.save()
     }
     
     var body: some View {
@@ -57,25 +73,49 @@ struct DecisionView: View {
                     }
                 }
                 .navigationTitle(decision.title)
+                .alert("Ошибка", isPresented: $isAnalyzeErrorShown) {
+                    Button("OK", role: .cancel) {}
+                } message: {
+                    Text(analyzeError)
+                }
                 .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        NavigationLink {
-                            DecisionEditorView(decision: decision, onSave: {_ in })
-                        } label: {
-                            Label("Редактировать", systemImage: "square.and.pencil")
-                        }
-                    }
-                    ToolbarItem(placement: .bottomBar) {
-                        Button("Получить ответы") {
-                            Task {
-                                do {
-                                    try await analyze()
-                                } catch {
-                                    print("error", error)
-                                }
+                    if !decisions.isEmpty {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            NavigationLink {
+                                DecisionEditorView(decision: decision, onSave: {_ in })
+                            } label: {
+                                Label("Редактировать", systemImage: "square.and.pencil")
                             }
                         }
+                        ToolbarItem(placement: .bottomBar) {
+                            Button {
+                                guard !isAnalyzing else { return }
+                                isAnalyzing = true
+                                
+                                Task {
+                                    defer { isAnalyzing = false }
+                                    
+                                    do {
+                                        try await analyze()
+                                    } catch {
+                                        isAnalyzeErrorShown = true
+                                        analyzeError = error.localizedDescription
+                                    }
+                                }
+                            } label: {
+                                HStack {
+                                    if isAnalyzing {
+                                        ProgressView()
+                                            .tint(.primary)
+                                            .colorInvert()
+                                    }
+                                    
+                                    Text(isAnalyzing ? "Получение..." : "Получить ответы")
+                                }
+                            }
                             .buttonStyle(.glassProminent)
+                            .disabled(isAnalyzing)
+                        }
                     }
                 }
             } else if _decisions.fetchError != nil {
