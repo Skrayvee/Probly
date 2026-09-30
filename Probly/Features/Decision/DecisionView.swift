@@ -85,16 +85,13 @@ struct DecisionView: View {
                                         let percent = Int((noul * 100).rounded())
                                         Text("Да — \(percent)% · Нет — \(100 - percent)%")
                                     case .score(let score):
-                                        if let maxProbability = score.probabilities.max(by: { $0.value < $1.value }) {
-                                            let probability = Int(maxProbability.value * 100)
-                                            if let title = score.legend?[maxProbability.key] {
+                                        if let maxProbability = score.probabilities.max(by: { $0.value < $1.value }),
+                                               let title = score.legend[maxProbability.key] {
+                                                let probability = Int((maxProbability.value * 100).rounded())
                                                 Text("\(title) · \(probability)%")
-                                            } else {
-                                                Text("\(probability)%")
                                             }
-                                        }
                                     case .choice(let choice):
-                                        if let probability = choice.probabilities[choice.choice]?.rounded() {
+                                        if let probability = choice.probabilities[choice.choice] {
                                             Text("\(choice.choice) — \(Int(probability * 100))%")
                                         } else {
                                             Text(choice.choice)

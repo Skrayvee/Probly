@@ -17,7 +17,7 @@ struct ScoreAnswer: Codable {
     let score: Double
     let probabilities: [String: Double]
     let confidence: Double
-    let legend: [String: String]?
+    let legend: [String: String]
 }
 
 enum QuestionAnswer: Codable {
