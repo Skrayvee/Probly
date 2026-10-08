@@ -1,0 +1,4 @@
+Tool: built-in image_gen
+Export: PNG resized to 1024 x 1024 with sips, alpha preserved.
+
+A clean app icon foreground asset, exact 1024x1024 PNG, transparent background. Flat white vector silhouette of a spiky speech bubble. One solid white rounded horizontal oval speech bubble with a pronounced triangular lower-left tail and five short sharp triangular spikes protruding from its top and sides. The speech bubble has broad smooth rounded arcs between the spikes. A distinctive calm playful mark. No outline. No stroke. No texture. No shading. No shadows. No gradients. No distressed edges. No speckles. No noise. Absolutely pristine mathematically smooth edges and a completely uniform white fill. White logo only on fully transparent alpha. Large 130px transparent padding all around on the exact 1024 by 1024 pixel canvas. No text, no dots, no eyes, no frame, no background square, no checkered background. Production-ready cutout icon layer for Apple Icon Composer.
