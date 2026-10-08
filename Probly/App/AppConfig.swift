@@ -8,5 +8,5 @@
 import Foundation
 
 enum AppConfig {
-    static let apiUrl = URL(string: "http://192.168.0.63:8080")!
+    static let apiUrl = URL(string: "https://probly-api-three.vercel.app")!
 }
